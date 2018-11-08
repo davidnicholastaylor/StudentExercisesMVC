@@ -52,48 +52,104 @@ namespace StudentExerciseMVC.Controllers
         // GET: Instructors/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            return View();
+            string sql = $@"
+            SELECT
+                i.Id,
+                i.FirstName,
+                i.LastName,
+                i.SlackHandle,
+                i.Specialty,
+                i.CohortId
+            FROM Instructor i
+            WHERE i.Id = {id}
+            ";
+
+            using (IDbConnection conn = Connection)
+            {
+                Instructor instructor = await conn.QueryFirstAsync<Instructor>(sql);
+                return View(instructor);
+            }
         }
 
         // GET: Instructors/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new InstructorCreateViewModel(_config);
+            return View(model);
         }
 
         // POST: Instructors/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(InstructorCreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            string sql = $@"INSERT INTO Instructor 
+            (FirstName, LastName, SlackHandle, Specialty, CohortId)
+            VALUES
+            (
+                '{model.student.FirstName}'
+                ,'{model.student.LastName}'
+                ,'{model.student.SlackHandle}'
+                ,'{model.student.Specialty}'
+                ,{model.student.CohortId}
+            );";
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            using (IDbConnection conn = Connection)
             {
-                return View();
+                var newId = await conn.ExecuteAsync(sql);
+                return RedirectToAction(nameof(Index));
             }
         }
 
         // GET: Instructors/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            string sql = $@"
+            SELECT
+                i.Id,
+                i.FirstName,
+                i.LastName,
+                i.SlackHandle,
+                i.Specialty,
+                i.CohortId
+            FROM Instructor
+            WHERE i.Id = {id}
+            ";
+
+            using (IDbConnection conn = Connection)
+            {
+                Instructor instructor = await conn.QueryFirstAsync<Instructor>(sql);
+                return View(instructor);
+            }
         }
 
         // POST: Instructors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Instructor instructor)
         {
             try
             {
                 // TODO: Add update logic here
+                string sql = $@"
+                    UPDATE Instructor
+                    SET FirstName = '{instructor.FirstName}',
+                        LastName = '{instructor.LastName}',
+                        SlackHandle = '{instructor.SlackHandle}',
+                        Specialty = '{instructor.Specialty}'
 
-                return RedirectToAction(nameof(Index));
+                    WHERE Id = {id}";
+
+                using (IDbConnection conn = Connection)
+                {
+                    int rowsAffected = await conn.ExecuteAsync(sql);
+                    if (rowsAffected > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    return BadRequest();
+
+                }
             }
             catch
             {
@@ -102,25 +158,42 @@ namespace StudentExerciseMVC.Controllers
         }
 
         // GET: Instructors/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteConfirm(int id)
         {
-            return View();
+            string sql = $@"
+            SELECT
+                i.Id,
+                i.FirstName,
+                i.LastName,
+                i.SlackHandle,
+                i.Specialty,
+                i.CohortId
+            FROM Instructor i
+            WHERE i.Id = {id}
+            ";
+
+            using (IDbConnection conn = Connection)
+            {
+                Instructor instructor = await conn.QueryFirstAsync<Instructor>(sql);
+                return View(instructor);
+            }
         }
 
         // POST: Instructors/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            string sql = $@"DELETE FROM Instructor WHERE Id = {id}";
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            using (IDbConnection conn = Connection)
             {
-                return View();
+                int rowsAffected = await conn.ExecuteAsync(sql);
+                if (rowsAffected > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                throw new Exception("No rows affected");
             }
         }
     }
