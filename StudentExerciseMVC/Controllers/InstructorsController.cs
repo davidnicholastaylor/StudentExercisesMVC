@@ -42,7 +42,7 @@ namespace StudentExerciseMVC.Controllers
                         i.FirstName,
                         i.LastName,
                         i.SlackHandle,
-                        i.Specialty
+                        i.Specialty,
                         i.CohortId
                     FROM Instructor i
                 ");
@@ -113,7 +113,7 @@ namespace StudentExerciseMVC.Controllers
                 i.SlackHandle,
                 i.Specialty,
                 i.CohortId
-            FROM Instructor
+            FROM Instructor i
             WHERE i.Id = {id}
             ";
 
