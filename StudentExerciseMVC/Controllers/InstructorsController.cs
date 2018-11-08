@@ -8,6 +8,7 @@ using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using StudentExerciseMVC.Models.ViewModels;
 using StudentExercisesAPI.Data;
 
 namespace StudentExerciseMVC.Controllers
@@ -87,11 +88,11 @@ namespace StudentExerciseMVC.Controllers
             (FirstName, LastName, SlackHandle, Specialty, CohortId)
             VALUES
             (
-                '{model.student.FirstName}'
-                ,'{model.student.LastName}'
-                ,'{model.student.SlackHandle}'
-                ,'{model.student.Specialty}'
-                ,{model.student.CohortId}
+                '{model.instructor.FirstName}'
+                ,'{model.instructor.LastName}'
+                ,'{model.instructor.SlackHandle}'
+                ,'{model.instructor.Specialty}'
+                ,{model.instructor.CohortId}
             );";
 
             using (IDbConnection conn = Connection)
