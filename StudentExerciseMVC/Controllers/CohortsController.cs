@@ -100,7 +100,7 @@ namespace StudentExerciseMVC.Controllers
             using (IDbConnection conn = Connection)
             {
                 Cohort cohort = await conn.QueryFirstAsync<Cohort>(sql);
-                return View();
+                return View(cohort);
             }
         }
 
@@ -113,7 +113,7 @@ namespace StudentExerciseMVC.Controllers
             {
                 string sql = $@"
                 UPDATE Cohort
-                SET CohortName = '{cohort.Name}'
+                SET Name = '{cohort.Name}'
                 WHERE Id = {id}
                 ";
 

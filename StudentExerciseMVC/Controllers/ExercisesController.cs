@@ -40,7 +40,7 @@ namespace StudentExerciseMVC.Controllers
                     e.Language
                 FROM Exercise e
                 ");
-                return View();
+                return View(exercises);
             }
         }
 
