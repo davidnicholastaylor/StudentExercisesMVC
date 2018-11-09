@@ -180,11 +180,15 @@ namespace StudentExerciseMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id)
         {
-            string sql = $@"DELETE FROM Student WHERE Id = {id}";
+            string sql = $@"
+            DELETE FROM Student WHERE Id = {id}";
+
+            string sqlSE = $@"
+            DELETE FROM StudentExercise WHERE StudentId = {id}";
 
             using (IDbConnection conn = Connection)
             {
-                int rowsAffected = await conn.ExecuteAsync(sql);
+                int rowsAffected = await conn.ExecuteAsync(sqlSE, sql);
                 if (rowsAffected > 0)
                 {
                     return RedirectToAction(nameof(Index));
