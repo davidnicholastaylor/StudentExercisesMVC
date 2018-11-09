@@ -20,10 +20,10 @@ namespace StudentExerciseMVC.Models.ViewModels
 
         public StudentCreateViewModel() { }
 
-        public StudentCreateViewModel(IConfiguration config)
+        public StudentCreateViewModel(IConfiguration _config)
         {
 
-            using (IDbConnection conn = new SqlConnection(config.GetConnectionString("DefaultConnection")))
+            using (IDbConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 Cohorts = conn.Query<Cohort>(@"
                     SELECT Id, Name FROM Cohort;
